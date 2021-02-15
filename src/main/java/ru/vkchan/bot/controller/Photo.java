@@ -44,7 +44,7 @@ public class Photo {
         JsonObject jsonObject= (JsonObject) JsonParser.parseString(json);
      //   jsonObject.get("attachments");
   //      System.out.println(jsonObject.get("attachments").getAsJsonArray().get(0).getAsJsonObject().get("photo").getAsJsonObject().get("sizes").getAsJsonArray().get(0).getAsJsonObject().get("url").getAsString());
-        return jsonObject.get("attachments").getAsJsonArray().get(0).getAsJsonObject().get("photo").getAsJsonObject().get("sizes").getAsJsonArray().get(0).getAsJsonObject().get("url").getAsString();
+        return jsonObject.get("attachments").getAsJsonArray().get(0).getAsJsonObject().get("photo").getAsJsonObject().get("sizes").getAsJsonArray().get(5).getAsJsonObject().get("url").getAsString();
     }
     public static void urlToFile(URL pUrl, File file) throws IOException {
         FileUtils.copyURLToFile(pUrl, file);
