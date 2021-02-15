@@ -12,8 +12,10 @@ import ru.vkchan.bot.kinterface.Keys;
 
 import ru.vkchan.bot.search.AnimeFinder;
 import ru.vkchan.bot.search.AnimeShikimori;
+import ru.vkchan.bot.search.PostToImgSearch;
 import ru.vkchan.bot.temp.UsersStatus;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Random;
 
@@ -23,6 +25,7 @@ public class GroupMess {
     static VkApiClient vk;
     static GroupActor actor;
     static Photos photos;
+    static String attachmentUrl;
     public static void init(VkApiClient vk, GroupActor actor, Integer ts) {
         GroupMess.actor = actor;
         GroupMess.vk = vk;
@@ -48,8 +51,16 @@ public class GroupMess {
 
     }
     public static void messageHandler(Message message, int id) throws ClientException, ApiException {         //   vk.messages().send(actor).message("Сначала вступи в группу b-b-baka! ").attachment("photo91059910_457254607").userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
-
         System.out.println(message.toString());
+        try {
+            attachmentUrl = Photo.getPhotoUrl(message.toString());
+            Photo.urlToFile(new URL(attachmentUrl), Photo.photo);
+            System.out.println(attachmentUrl);
+        //   System.out.println(AnimeFinder.getNameOfAnime(PostToImgSearch.post(Photo.photo)));
+        } catch (Exception e)
+        {
+            System.out.println("Message without attachment");
+        }
             if (!UsersStatus.checkExist(message.getFromId()))
                 UsersStatus.setStatus("null", message.getFromId());
             System.out.println();
@@ -67,7 +78,8 @@ public class GroupMess {
             if (UsersStatus.getStatus(message.getFromId()).equals("wfi") && (!message.getText().equals("Назад"))) {
                 vk.messages().send(actor).message("Ищем скрин в базе данных...").userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
                 try {
-                    vk.messages().send(actor).message(AnimeFinder.getNameOfAnime(message.getText())).attachment(Photo.uploadPhoto(actor,AnimeShikimori.getImageUrl())).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
+                    //vk.messages().send(actor).message(AnimeFinder.getNameOfAnime(attachmentUrl)).*/attachment(Photo.uploadPhoto(actor,AnimeShikimori.getImageUrl())).attachment(Photo.uploadPhoto(actor,attachmentUrl)).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
+                    vk.messages().send(actor).message(AnimeFinder.getNameOfAnime(PostToImgSearch.post(Photo.photo))).attachment(Photo.uploadPhoto(actor,AnimeShikimori.getImageUrl())).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
                 } catch (Exception e) {
                     //   UsersStatus.setStatus("null", message.getFromId());
                     vk.messages().send(actor).message("По запросу ничего не найдено").userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
@@ -88,7 +100,7 @@ public class GroupMess {
             }
             if (message.getText().equals("Поиск по картинке")) {
                 UsersStatus.setStatus("wfi", message.getFromId());
-                vk.messages().send(actor).message("Отравте скрин из аниме, или прямую ссылку для поиска по картинке").keyboard(new CustomKeyboard(Keys.BackKey)).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
+                vk.messages().send(actor).message("Отравте скрин из аниме(или ссылку, но подождите пока вк не загрузит ее в виде изображения) для поиска по картинке").keyboard(new CustomKeyboard(Keys.BackKey)).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
             }
             if (message.getText().equals("Назад")) {
                 UsersStatus.setStatus("null", message.getFromId());

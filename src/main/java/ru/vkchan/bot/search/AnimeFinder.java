@@ -8,25 +8,30 @@ import java.util.Scanner;
 
 public class AnimeFinder {
     private  final static String API="https://trace.moe/api/search?url=";
-    public static String getNameOfAnime(String URL) throws IOException {
+    public static String getNameOfAnime(String JsonObj) throws IOException {
         String time;
-        String request= null;
-        try {
-            request = GetJson.getJSON(API+URL);
-        } catch (Exception e) {
-            System.out.println("Ошибка при поиске");
-        }
+        String request=JsonObj;
         assert request != null;
         JsonObject object=JsonParser.parseString(request).getAsJsonObject();
         System.out.println(object);
-        String name = object.getAsJsonArray("docs").get(0).getAsJsonObject().get("title_english").getAsString();
+        String name="";
+        try {
+            name = object.getAsJsonArray("docs").get(0).getAsJsonObject().get("title_english").getAsString();
+        } catch (Exception e){
+            name = object.getAsJsonArray("docs").get(0).getAsJsonObject().get("title_romaji").getAsString();
+        }
         System.out.println(name);
         try {
              time = object.getAsJsonArray("docs").get(0).getAsJsonObject().get("episode").getAsString();
         } catch (Exception e) {
             time = "";
         }
-        int similarity = Math.round(100 * object.getAsJsonArray("docs").get(0).getAsJsonObject().get("similarity").getAsFloat());
+        int similarity=0;
+        try {
+            similarity = Math.round(100 * object.getAsJsonArray("docs").get(0).getAsJsonObject().get("similarity").getAsFloat());
+        } catch (Exception e){
+            System.out.println("No similarity");
+        }
         String times="";
         if (!time.equals("")) times+= time +" серия\n";
         return "С вероятностью "+ similarity +"% Это аниме \""+ name + "\" "+ times +"\n"+AnimeShikimori.output(name);
