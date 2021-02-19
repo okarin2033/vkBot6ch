@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLOutput;
 import java.util.Base64;
 import java.util.List;
 
@@ -44,7 +45,10 @@ public class Photo {
         JsonObject jsonObject= (JsonObject) JsonParser.parseString(json);
      //   jsonObject.get("attachments");
   //      System.out.println(jsonObject.get("attachments").getAsJsonArray().get(0).getAsJsonObject().get("photo").getAsJsonObject().get("sizes").getAsJsonArray().get(0).getAsJsonObject().get("url").getAsString());
-        return jsonObject.get("attachments").getAsJsonArray().get(0).getAsJsonObject().get("photo").getAsJsonObject().get("sizes").getAsJsonArray().get(5).getAsJsonObject().get("url").getAsString();
+
+        String out = jsonObject.get("attachments").getAsJsonArray().get(0).getAsJsonObject().get("photo").getAsJsonObject().get("sizes").getAsJsonArray().get(5).getAsJsonObject().get("url").getAsString();
+        System.out.println("out");
+        return out;
     }
     public static void urlToFile(URL pUrl, File file) throws IOException {
         FileUtils.copyURLToFile(pUrl, file);

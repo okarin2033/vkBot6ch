@@ -13,12 +13,14 @@ import ru.vkchan.bot.temp.UsersStatus;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
+
     final static int
             groupId=91059910;
     final static String
             GROUP_TOKEN="978688da1c2af3a0a3ed507e9cbcfaffe4684b5e56f562249cb3229060469d5c2783b6b300c9271eedc5f";
     static VkApiClient vk;
     public static void main(String[] args) throws ClientException, ApiException, InterruptedException {
+
         Thread1 thread1=new Thread1();
         thread1.start();
         System.out.println("F");
